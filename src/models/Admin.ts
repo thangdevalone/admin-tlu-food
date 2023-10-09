@@ -1,4 +1,4 @@
-import { Role } from "."
+import { Role, User } from "."
 
 export interface searchRoot {
   id: number
@@ -111,16 +111,7 @@ export interface UserRoot {
 
 export interface InvoiceRoot {
   totalRow: number
-  data: Invoice[]
-}
-export interface Invoice {
-  id: number
-  createAt: string
-  orderStatus: string
-  nameRestaurant: string
-  shipFee: number
-  finishTime: any
-  foodResponseBills: FoodResponseBill[]
+  data: BillUser[]
 }
 
 export interface FoodResponseBill {
@@ -137,15 +128,23 @@ export interface ItemTopping {
   name: string
   price: number
 }
-
+export interface VoucherResponseBill {
+  code: string
+  discount: number
+  expired: string
+  createDate: string
+}
 export interface BillUser {
   id: number
   createAt: string
   orderStatus: string
-  nameRestaurant?: string
   shipFee: number
-  finishTime: any
+  finishTime: string
+  user?:User
   accountId: number
+  totalAmount: number
+  note: string
+  voucherResponseBill: VoucherResponseBill
   foodResponseBills: FoodResponseBill[]
 }
 

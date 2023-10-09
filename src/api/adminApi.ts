@@ -216,7 +216,10 @@ const adminApi = {
     const url = `ADMIN/get-detail-res?id=${id}`
     return axiosClient.post(url)
   },
-
+  getDetailBill(id:number){
+    const url = `ADMIN/get-detail-bill?id=${id}`
+    return axiosClient.post(url)
+  },
   getBill(page: PageConfig, status: string | null) {
     if (status) {
       const url = `ADMIN/get-bill?pageIndex=${page.pageIndex}&pageSize=${page.pageSize}&orderStatus=${status}`

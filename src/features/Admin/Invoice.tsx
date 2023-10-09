@@ -1,8 +1,9 @@
 import History from "@/Router/History"
 import adminApi from "@/api/adminApi"
-import { InvoiceRoot, Invoice } from "@/models"
-import { handlePrice } from "@/utils"
+import { BillUser, InvoiceRoot } from "@/models"
+import { formatCurrencyVND, handlePrice } from "@/utils"
 import { Box, Stack, Tab, Tabs, Typography } from "@mui/material"
+import dayjs from "dayjs"
 import {
   MaterialReactTable,
   type MRT_ColumnDef,
@@ -28,12 +29,11 @@ const InvoiceAdmin = () => {
   const location = useLocation() // Get the current location object
   const queryParams = queryString.parse(location.search) // Parse query parameters from the location
   const navigate = useNavigate()
-  const [invoice, setInvoice] = useState<Invoice[]>([])
+  const [invoice, setInvoice] = useState<BillUser[]>([])
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isRefetching, setIsRefetching] = useState(false)
   const [rowCount, setRowCount] = useState(0)
-  const { enqueueSnackbar } = useSnackbar()
   //table state
   const [status, setStatus] = useState<string>("PENDING")
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([])
@@ -44,27 +44,8 @@ const InvoiceAdmin = () => {
     pageSize: 10,
   })
   const [isDel, setIsDel] = useState(false)
-  const [open, setOpen] = useState(false)
   const settingRef = useRef<HTMLButtonElement>(null)
   const [tabs, setTabs] = useState(0)
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen)
-  }
-  const handleSelectRows = (row: any) => {
-    console.log(row)
-    const idData = row.map((item: any) => item.original.id)
-    ;(async () => {
-      try {
-        await adminApi.deleteFood(idData)
-        enqueueSnackbar("Xóa thành công", { variant: "success" })
-        setIsDel((item) => !item)
-      } catch (error) {
-        enqueueSnackbar("Có lỗi xảy ra thử lại sau", { variant: "error" })
-        console.log(error)
-      }
-    })()
-  }
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const tabLabels = ["ALL", "PENDING", "PROCESSING", "DELIVERED", "CANCELED"]
     setStatus(tabLabels[newValue])
@@ -117,43 +98,29 @@ const InvoiceAdmin = () => {
     status,
   ])
 
-  const columns = useMemo<MRT_ColumnDef<Invoice>[]>(
+  const columns = useMemo<MRT_ColumnDef<BillUser>[]>(
     () => [
       { accessorKey: "id", header: "ID" },
-      { accessorKey: "nameRestaurant", header: "Tên cửa hàng" },
-      // {
-      //   accessorKey: "foodResponseBills",
-      //   header: "Số lượng",
-      //   Cell: ({ cell }) => {
-      //     const totalQuantity = cell?.row.original.foodResponseBills.reduce(
-      //       (total: number, foodResponseBill: any) => {
-      //         return total + foodResponseBill.quantity
-      //       },
-      //       0,
-      //     )
-      //     return totalQuantity
-      //   },
-      // },
+      { accessorKey: "accountId", header: "Người đặt" },
+      // { accessorKey: "accountId", header: "Người đặt" },
       {
         accessorKey: "shipFee",
         header: "Phí ship",
-        Cell: ({ cell }) => `${handlePrice(+cell.getValue<string>())} VND `,
+        Cell: ({ cell }) =>  formatCurrencyVND(cell.getValue<string>()),
       },
       {
-        accessorKey: "foodResponseBills",
+        accessorKey: "totalAmount",
         header: "Tổng đơn hàng",
-        Cell: ({ cell }) => {
-          console.log(cell)
-          const totalAmount = cell?.row.original.foodResponseBills.reduce(
-            (total: number, foodResponseBill: any) => {
-              return (
-                total + foodResponseBill.priceFood * foodResponseBill.quantity
-              )
-            },
-            0,
-          )
-          return `${handlePrice(totalAmount)} VND`
-        },
+        Cell: ({ cell }) =>  formatCurrencyVND(cell.getValue<string>())
+      },
+      {
+        accessorKey: "finishTime",
+        header: "Giờ giao",
+      },
+      {
+        accessorKey: "createAt",
+        header: "Tạo lúc",
+        Cell: ({ cell }) =>  dayjs(cell.getValue<string>()).format("HH:mm DD/MM/YYYY")
       },
     ],
     [],
@@ -198,7 +165,7 @@ const InvoiceAdmin = () => {
         manualFiltering
         manualPagination
         muiTableBodyRowProps={({ row }) => ({
-          onClick: () => {},
+          onClick: () => {navigate(`/admin/update?form=invoice/${row.original.id}`)},
           sx: { cursor: "pointer" },
         })}
         manualSorting

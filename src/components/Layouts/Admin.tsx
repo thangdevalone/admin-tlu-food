@@ -20,6 +20,7 @@ import { HeaderAdmin } from "../Common/HeaderAdmin"
 import { Voucher } from "@/features/Admin/Voucher"
 import NewVoucher from "@/features/Admin/components/NewVoucher"
 import UpdateVoucher from "@/features/Admin/components/UpdateVoucher"
+import UpdateInvoice from "@/features/Admin/components/UpdateInvoice"
 
 const WelComeAdmin = () => {
   return (
@@ -87,6 +88,8 @@ const FormUpdate = () => {
         return <UpdateCustomer id={id} />
       case "voucher":
         return <UpdateVoucher id={id} />
+        case "invoice":
+        return <UpdateInvoice id={id} />
       default:
         return null
     }
