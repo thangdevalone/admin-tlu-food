@@ -2,7 +2,8 @@ import History from "@/Router/History"
 import adminApi from "@/api/adminApi"
 import { BillUser, InvoiceRoot } from "@/models"
 import { formatCurrencyVND, handlePrice } from "@/utils"
-import { Box, Stack, Tab, Tabs, Typography } from "@mui/material"
+import { Delete, Settings } from "@mui/icons-material"
+import { Box, IconButton, Stack, Tab, Tabs, Typography } from "@mui/material"
 import dayjs from "dayjs"
 import {
   MaterialReactTable,
@@ -106,12 +107,12 @@ const InvoiceAdmin = () => {
       {
         accessorKey: "shipFee",
         header: "Phí ship",
-        Cell: ({ cell }) =>  formatCurrencyVND(cell.getValue<string>()),
+        Cell: ({ cell }) => formatCurrencyVND(cell.getValue<string>()),
       },
       {
         accessorKey: "totalAmount",
         header: "Tổng đơn hàng",
-        Cell: ({ cell }) =>  formatCurrencyVND(cell.getValue<string>())
+        Cell: ({ cell }) => formatCurrencyVND(cell.getValue<string>()),
       },
       {
         accessorKey: "finishTime",
@@ -120,7 +121,8 @@ const InvoiceAdmin = () => {
       {
         accessorKey: "createAt",
         header: "Tạo lúc",
-        Cell: ({ cell }) =>  dayjs(cell.getValue<string>()).format("HH:mm DD/MM/YYYY")
+        Cell: ({ cell }) =>
+          dayjs(cell.getValue<string>()).format("HH:mm DD/MM/YYYY"),
       },
     ],
     [],
@@ -158,14 +160,44 @@ const InvoiceAdmin = () => {
       </Stack>
       <MaterialReactTable
         muiTablePaperProps={{ sx: { height: "100%" } }}
-        muiTableContainerProps={{ sx: { height: "calc(100% - 112px)" } }}
+        muiTableContainerProps={{ sx: { height: "calc(100% - 160px)" } }}
+        renderTopToolbarCustomActions={({ table }) => (
+          <Stack direction="row" alignItems="center">
+            <Box sx={{ mr: "10px" }}></Box>
+            <Typography sx={{ fontSize: "18px", fontWeight: 500, mr: "10px" }}>
+              Bill
+            </Typography>
+            <IconButton
+              ref={settingRef}
+              // onClick={handleToggle}
+              size="small"
+              sx={{ mr: "5px" }}
+            >
+              <Settings htmlColor="black" fontSize="small" />
+            </IconButton>
+            {table.getSelectedRowModel().rows.length > 0 && (
+              <IconButton
+                size="small"
+                sx={{ mr: "5px" }}
+                onClick={() =>
+                  // handleSelectRows(table.getSelectedRowModel().rows)
+                  alert("hair ddawng")
+                }
+              >
+                <Delete fontSize="small" htmlColor="black" />
+              </IconButton>
+            )}
+          </Stack>
+        )}
         columns={columns}
         data={invoice}
         enableRowSelection
         manualFiltering
         manualPagination
         muiTableBodyRowProps={({ row }) => ({
-          onClick: () => {navigate(`/admin/update?form=invoice/${row.original.id}`)},
+          onClick: () => {
+            navigate(`/admin/update?form=invoice/${row.original.id}`)
+          },
           sx: { cursor: "pointer" },
         })}
         manualSorting
@@ -183,9 +215,6 @@ const InvoiceAdmin = () => {
             display: isTopToolbar ? "block" : "none", //hide bottom progress bar
           },
         })}
-        renderTopToolbarCustomActions={({ table }) => (
-          <Stack direction="row" alignItems="center"></Stack>
-        )}
         onColumnFiltersChange={setColumnFilters}
         onGlobalFilterChange={setGlobalFilter}
         onPaginationChange={setPagination}

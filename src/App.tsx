@@ -25,7 +25,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route element={<LoadServer />}>
-          <Route path="/" element={<Navigate to="/login"/>}/>
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route element={<ProtectAuth />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />

@@ -64,7 +64,7 @@ const FormRouter = () => {
     case "employee":
       return <NewEmployee />
     case "voucher":
-        return <NewVoucher />
+      return <NewVoucher />
     default:
       return null
   }
@@ -88,7 +88,7 @@ const FormUpdate = () => {
         return <UpdateCustomer id={id} />
       case "voucher":
         return <UpdateVoucher id={id} />
-        case "invoice":
+      case "invoice":
         return <UpdateInvoice id={id} />
       default:
         return null
