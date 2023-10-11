@@ -38,44 +38,40 @@ function a11yProps(index: number) {
 const UpdateInvoice = ({ id }: { id: string }) => {
   const [tabs, setTabs] = React.useState(0)
   const [loadding, setLoadding] = React.useState(false)
-  const [openBackDrop, setOpenBackDrop] = React.useState(false)
-  const [orderStatus,setOrderStatus]=React.useState("PENDING")
+  const [orderStatus, setOrderStatus] = React.useState("")
   const { enqueueSnackbar } = useSnackbar()
-  const [data,setData]=React.useState<BillUser>()
+  const [data, setData] = React.useState<BillUser>()
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabs(newValue)
   }
 
   const handleChangeInvoice = () => {
-    async function uploadImage() {
-      setLoadding(true)
-      try {
-        setLoadding(false)
-        enqueueSnackbar("Sửa hóa đơn thành công", {
-          variant: "success",
-        })
-      
-      } catch (error) {
-        console.log(error)
-        setLoadding(false)
-        enqueueSnackbar("Có lỗi xảy ra vui lòng thử lại", { variant: "error" })
+    async function uploadData() {
+      if (data?.id){
+        try {
+          setLoadding(true)
+          await adminApi.updateBill(orderStatus,data.id)
+          setLoadding(false)
+          enqueueSnackbar("Sửa hóa đơn thành công", {
+            variant: "success",
+          })
+        } catch (error) {
+          console.log(error)
+          setLoadding(false)
+          enqueueSnackbar("Có lỗi xảy ra vui lòng thử lại", { variant: "error" })
+        }
       }
     }
-    uploadImage()
-  }
-  const handleChangeInput = (
-    value: string,
-    callback: (newVal: string) => void,
-  ) => {
-    callback(value)
+    uploadData()
   }
   const navigate = useNavigate()
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const res= await adminApi.getDetailBill(Number(id))
-        const data=res.data as BillUser
+        const res = await adminApi.getDetailBill(Number(id))
+        const data = res.data as BillUser
+        setOrderStatus(data.orderStatus)
         setData(data)
       } catch (err) {
         console.log(err)
@@ -106,14 +102,18 @@ const UpdateInvoice = ({ id }: { id: string }) => {
           size="small"
           startIcon={<ArrowBackIosNew fontSize="small" />}
           onClick={() => {
-            navigate("/admin/product")
+            navigate("/admin/invoice")
           }}
           variant="contained"
           sx={{ mr: "10px", textTransform: "revert" }}
         >
-          Sản phẩm
+          Đơn hàng
         </Button>
-        <IconButton onClick={handleChangeInvoice} size="small" sx={{ mr: "5px" }}>
+        <IconButton
+          onClick={handleChangeInvoice}
+          size="small"
+          sx={{ mr: "5px" }}
+        >
           <CloudUpload fontSize="small" />
         </IconButton>
         <IconButton size="small" sx={{ mr: "5px" }}>
@@ -131,7 +131,7 @@ const UpdateInvoice = ({ id }: { id: string }) => {
         <Grid sx={{ width: "100%", height: "100%" }} container spacing={2}>
           <Grid item xs={8}>
             <Box sx={{ width: "100%", height: "100%" }} className="mb-4">
-              <p className="font-medium text-lg mb-2">Sửa sản phẩm </p>
+              <p className="font-medium text-lg mb-2">Sửa đơn hàng </p>
               <div className="border   bg-white rounded-md border-gray-300 p-[15px]">
                 <div className="flex w-[100%]">
                   <div className="flex-1 mr-[20px]">
@@ -142,11 +142,13 @@ const UpdateInvoice = ({ id }: { id: string }) => {
                       fullWidth
                       sx={{ height: "50px", fontSize: "25px", p: 0 }}
                       placeholder="ID hóa đơn"
-                      value={`Đơn hàng #${dayjs(data?.createAt).format("HHMMssDDMMYY")}O${data?.id}`}
+                      value={`Đơn hàng #${dayjs(data?.createAt).format(
+                        "DDMMYY",
+                      )}O${data?.id}`}
                     />
-                   </div>
                   </div>
-            
+                </div>
+
                 <div>
                   <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs
@@ -172,20 +174,21 @@ const UpdateInvoice = ({ id }: { id: string }) => {
                                 </label>
                               </Grid>
                               <Grid item xs={8}>
-                              <select
-                      id="status"
-                      defaultValue={data?.orderStatus}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                        
-                      }}
-                      className="bg-gray-50 border appearance-none custom-select border-gray-300 text-black rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      
-                    >
-                      <option value="PENDING">Chờ xác nhận</option>
-                      <option value="PROCESSING">Đang giao</option>
-                      <option value="DELIVERED">Đã giao hàng</option>
-                      <option value="CANCELED">Đã giao hàng</option>
-                    </select>
+                                <select
+                                  id="status"
+                                  defaultValue={data?.orderStatus}
+                                  onChange={(
+                                    e: React.ChangeEvent<HTMLSelectElement>,
+                                  ) => {setOrderStatus(e.target.value)}}
+                                  className="bg-gray-50 border appearance-none custom-select border-gray-300 text-black rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                >
+                                  <option value="PENDING">Chờ xác nhận</option>
+                                  <option value="PROCESSING">Đang giao</option>
+                                  <option value="DELIVERED">
+                                    Đã giao hàng
+                                  </option>
+                                  <option value="CANCELED">Đã hủy</option>
+                                </select>
                               </Grid>
                               <Grid item xs={4}>
                                 <label
@@ -195,17 +198,14 @@ const UpdateInvoice = ({ id }: { id: string }) => {
                                   Giao cho
                                 </label>
                               </Grid>
-                              <Grid item xs={8}>
-                               
-                              </Grid>
+                              <Grid item xs={8}></Grid>
                             </Grid>
                           </Grid>
                         </Grid>
-                        
                       </Box>
                     )}
                   </div>
-                  </div>
+                </div>
               </div>
             </Box>
           </Grid>

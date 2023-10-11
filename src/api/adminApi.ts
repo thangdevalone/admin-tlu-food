@@ -187,6 +187,10 @@ const adminApi = {
     const url = "ADMIN/update-voucher"
     return axiosClient.put(url, data)
   },
+  updateBill(status:string,id:number){
+    const url=`ADMIN/update-bill?orderStatus=${status}&id=${id}`
+    return axiosClient.put(url)
+  },
   deleteFood(foodArray: Array<number>) {
     const url = "ADMIN/delete-food"
     return axiosClient.post(url, foodArray)

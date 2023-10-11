@@ -10,7 +10,7 @@ export const OrderList = getList(
   ["/quote", "/order", "/employee", "/customer"],
 )
 export const InvoiceList = getList(
-  ["Hóa đơn", "Thống kê hóa đơn"],
+  ["Đơn hàng", "Thống kê hóa đơn"],
   ["/invoice", "/invoice-stat"],
 )
 export const ProductList = getList(

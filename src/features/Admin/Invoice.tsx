@@ -48,7 +48,7 @@ const InvoiceAdmin = () => {
   const settingRef = useRef<HTMLButtonElement>(null)
   const [tabs, setTabs] = useState(0)
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    const tabLabels = ["ALL", "PENDING", "PROCESSING", "DELIVERED", "CANCELED"]
+    const tabLabels = ["Tất cả", "Chờ xác nhận", "Đang vận chuyển", "Đã hoàn thành", "Đã hủy"]
     setStatus(tabLabels[newValue])
     setTabs(newValue)
   }
@@ -103,7 +103,7 @@ const InvoiceAdmin = () => {
     () => [
       { accessorKey: "id", header: "ID" },
       { accessorKey: "accountId", header: "Người đặt" },
-      // { accessorKey: "accountId", header: "Người đặt" },
+      { accessorKey: "id", header: "Mã đơn" ,Cell:({cell,row})=> `#${dayjs(row.original.createAt).format("DDMMYY")}O${cell.getValue<string>()}`},
       {
         accessorKey: "shipFee",
         header: "Phí ship",
