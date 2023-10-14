@@ -48,7 +48,7 @@ const InvoiceAdmin = () => {
   const settingRef = useRef<HTMLButtonElement>(null)
   const [tabs, setTabs] = useState(0)
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    const tabLabels = ["Tất cả", "Chờ xác nhận", "Đang vận chuyển", "Đã hoàn thành", "Đã hủy"]
+    const tabLabels = ["ALL","PENDING", "PROCESSING", "DELIVERED", "CANCELED"]
     setStatus(tabLabels[newValue])
     setTabs(newValue)
   }
@@ -151,11 +151,11 @@ const InvoiceAdmin = () => {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="ALL" {...a11yProps(0)} />
-          <Tab label="PENDING" {...a11yProps(1)} />
-          <Tab label="PROCESSING" {...a11yProps(2)} />
-          <Tab label="DELIVERED" {...a11yProps(3)} />
-          <Tab label="CANCELED" {...a11yProps(4)} />
+          <Tab label="Tất cả" {...a11yProps(0)} />
+          <Tab label="Chờ xác nhận" {...a11yProps(1)} />
+          <Tab label="Đang vận chuyển" {...a11yProps(2)} />
+          <Tab label="Đã hoàn thành" {...a11yProps(3)} />
+          <Tab label="Đã hủy" {...a11yProps(4)} />
         </Tabs>
       </Stack>
       <MaterialReactTable
