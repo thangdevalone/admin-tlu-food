@@ -153,6 +153,7 @@ export function Supplier() {
         data={restaurant}
         enableRowSelection
         manualFiltering
+        manualPagination
         muiTableBodyRowProps={({ row }) => ({
           onClick: () =>
             navigate(`/admin/update?form=supplier/${row.original.id}`),
@@ -220,6 +221,7 @@ export function Supplier() {
           columnFilters,
           globalFilter,
           isLoading,
+          pagination,
           showAlertBanner: isError,
           showProgressBars: isRefetching,
           sorting,
