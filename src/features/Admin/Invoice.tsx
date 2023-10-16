@@ -103,7 +103,7 @@ const InvoiceAdmin = () => {
     () => [
       { accessorKey: "id", header: "ID" },
       { accessorKey: "accountId", header: "Người đặt" },
-      { header: "Mã đơn" ,Cell:({cell,row})=> `#${dayjs(row.original.createAt).format("DDMMYY")}O${cell.getValue<string>()}`},
+      { header: "Mã đơn" ,Cell:({cell,row})=> `#${dayjs(row.original.createAt).format("DDMMYY")}O${row.original.id}`},
       {
         accessorKey: "shipFee",
         header: "Phí ship",
