@@ -292,7 +292,8 @@ const UpdateInvoice = ({ id }: { id: string }) => {
                                 </div>
                               </div>
                             </Box>
-                            <Box>
+                            <Grid container spacing={2}>
+                              <Grid item xs={6}>
                               <p>Ghi chú:{data.note || "Không có ghi chú"}</p>
                               <p>
                                 Tổng phí vận chuyển:{" "}
@@ -303,10 +304,16 @@ const UpdateInvoice = ({ id }: { id: string }) => {
                                 {formatCurrencyVND(String(data.totalAmount))}
                               </p>
                               <p>
-                                Tổng phí đơn hàng:{" "}
-                                {formatCurrencyVND(String(data.totalAmount))}
+                                Tổng phí hóa đơn:{" "}
+                                {formatCurrencyVND(String(data.totalAmount +data.shipFee))}
                               </p>
-                            </Box>
+                              </Grid>
+                              <Grid item xs={6}>
+                                  <p>Tên khách:{data.user?.msv + " " + (data.user?.accountName || "Không rõ")}</p> 
+                                  <p> Số điện thoại: {data.user?.sdt}</p> 
+                                  <p> gmail: {data.user?.email || "Chưa xác thực"}</p> 
+                              </Grid>
+                            </Grid>
                           </Box>
                         )}
                       </div>

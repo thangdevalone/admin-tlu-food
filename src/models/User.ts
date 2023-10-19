@@ -6,6 +6,7 @@ export interface User {
   accountName: string
   imgUser: string
   msv: string
+  email?:string | null
 }
 
 export interface Role {
