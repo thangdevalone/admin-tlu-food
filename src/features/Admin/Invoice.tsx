@@ -36,7 +36,7 @@ const InvoiceAdmin = () => {
   const [isRefetching, setIsRefetching] = useState(false)
   const [rowCount, setRowCount] = useState(0)
   //table state
-  const [status, setStatus] = useState<string>("PENDING")
+  const [status, setStatus] = useState<string>("ALL")
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState("")
   const [sorting, setSorting] = useState<MRT_SortingState>([])
