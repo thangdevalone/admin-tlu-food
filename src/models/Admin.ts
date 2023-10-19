@@ -121,6 +121,7 @@ export interface FoodResponseBill {
   quantity: number
   nameRes: string
   resId: number
+  address?:string
   itemList: ItemTopping[]
 }
 
@@ -144,7 +145,7 @@ export interface BillUser {
   accountId: number
   totalAmount: number
   note: string
-  voucherResponseBill: VoucherResponseBill
+  voucherResponseBill: VoucherResponseBill | any
   foodResponseBills: FoodResponseBill[]
 }
 

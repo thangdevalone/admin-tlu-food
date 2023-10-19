@@ -8,4 +8,3 @@ export interface Order {
   billFoodRequests: BillFoodRequest[]
 }
 
-
